@@ -1,0 +1,131 @@
+<html>
+<head>
+	<title>Drag Race Game</title>
+	<style>
+		#canvas{
+			border:2px solid black;
+			background-image: url("https://docs.google.com/drawings/d/1lbssNBVqgtxogKOBNdfG8yrkHi-38XWc-DpPqbbxmcI/pub?w=960&amp;h=720");
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="960" height="720" border="2px solid black"s>
+	</canvas>
+	<script>
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		var player1X = 680;
+		var player2X = 680;
+		var upPressed = false;
+		var wPressed = false;
+		var playerWin = false;
+		var finishLine = 10;
+		var raceStart = false;
+		var L1color = "white";
+		var L2color = "white";
+		var L3color = "white";
+		
+		document.addEventListener("keydown", KeyDownHandler, false);
+		document.addEventListener("keyup",KeyUpHandler, false);
+	
+		
+		function KeyDownHandler(e) {
+			if(e.keyCode == 38) {
+				upPressed = true;
+				console.log("UpPressed");
+			}
+		else if(e.keyCode == 87) {
+				wPressed = true;
+				console.log("Wpressed");
+			}
+		}
+		function KeyUpHandler(e) {
+			if(e.keyCode == 38) {
+				upPressed = false;
+			}
+			else if(e.keyCode == 87){
+				wPressed = false;
+			}
+		}
+		function drawPlayer1(){
+			ctx.beginPath();
+			ctx.rect(190,player1X,25,25);
+			ctx.fillStyle = "red";
+			ctx.fill()
+			ctx.closePath();
+		}
+		function drawPlayer2(){
+			ctx.beginPath();
+			ctx.rect(775,player2X,25,25);
+			ctx.fillStyle = "blue";
+			ctx.fill()
+			ctx.closePath();
+		}
+		function drawLight1(){
+			ctx.beginPath();
+			ctx.arc(500,300,50,0,2*Math.PI);
+			ctx.stroke();
+			ctx.fillStyle = L1color;
+			ctx.fill();
+			ctx.closePath();
+		}
+		function drawLight2(){
+			ctx.beginPath();
+			ctx.arc(500,425,50,0,2*Math.PI);
+			ctx.stroke();
+			ctx.fillStyle = L2color;
+			ctx.fill();
+			ctx.closePath();
+		}
+		function drawLight3(){
+			ctx.beginPath();
+			ctx.arc(500,550,50,0,2*Math.PI);
+			ctx.stroke();
+			ctx.fillStyle = L3color;
+			ctx.fill();
+			ctx.closePath();
+		}
+		function player1wins(){
+			ctx.fillStyle = "black";
+			ctx.font="50px Georgia";
+			ctx.fillText("player 1 wins",370,100)
+		}
+		function player2wins(){
+			ctx.fillStyle = "black";
+			ctx.font="50px Georgia";
+			ctx.fillText("player 2 wins",370,100)
+		}
+		function draw(){
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawPlayer1()
+			drawPlayer2()
+			drawLight1()
+			drawLight2()
+			drawLight3()
+			if(upPressed && 0 < player1X && raceStart == true){
+				player1X -= 10;
+			}
+			if(wPressed && 0 < player2X && raceStart == true){
+				player2X -= 10;
+			}
+			if(player1X < finishLine && playerWin == false || wPressed && raceStart == false){
+				playerWin = true;
+				clearInterval(repaint)
+				player1wins()
+			}
+			if(player2X < finishLine && playerWin == false || upPressed && raceStart == false){
+				playerWin = true;
+				clearInterval(repaint)
+				player2wins()
+			}
+			if(raceStart == false){
+				setTimeout(function(){L1color = "red";},2000);
+				setTimeout(function(){L2color = "yellow";},4000);
+				setTimeout(function(){L3color = "green"; raceStart = true;},6000);
+							
+			}
+		}
+		var repaint = setInterval(draw, 10);
+	</script>
+</body>
+</html>
